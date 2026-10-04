@@ -34,4 +34,4 @@ class GoalResponse(GoalBase):
     updated_at: datetime
 
 class GoalContribute(BaseModel):
-    amount: float = Field(..., gt=0)\n
+    amount: float = Field(..., gt=0)

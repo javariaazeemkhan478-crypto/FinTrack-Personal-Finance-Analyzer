@@ -15,4 +15,4 @@ def require_roles(allowed_roles: list[Role]):
         if current_user.get("role") not in [role.value for role in allowed_roles]:
             raise ForbiddenException(message="You do not have enough permissions to perform this action.")
         return current_user
-    return role_checker\n
+    return role_checker

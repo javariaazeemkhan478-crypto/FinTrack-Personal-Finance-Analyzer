@@ -45,4 +45,4 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db=Depends(get
 
 @router.get("/me", response_model=UserResponse)
 async def get_me(current_user: dict = Depends(get_current_user)):
-    return current_user\n
+    return current_user

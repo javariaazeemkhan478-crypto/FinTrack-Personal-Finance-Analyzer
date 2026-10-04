@@ -13,4 +13,4 @@ class CategoryCreate(CategoryBase):
 class CategoryResponse(CategoryBase):
     id: str
     user_id: Optional[str]
-    created_at: datetime\n
+    created_at: datetime

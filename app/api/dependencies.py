@@ -24,4 +24,4 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db=Depends(get_d
         raise UnauthorizedException(message="Inactive user")
         
     user["id"] = str(user["_id"])
-    return user\n
+    return user

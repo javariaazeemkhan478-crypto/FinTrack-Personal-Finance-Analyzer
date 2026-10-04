@@ -41,4 +41,4 @@ class TransactionResponse(TransactionBase):
     id: str
     user_id: str
     created_at: datetime
-    updated_at: datetime\n
+    updated_at: datetime

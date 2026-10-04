@@ -22,4 +22,4 @@ class BudgetResponse(BudgetBase):
     usage_percentage: float = 0.0
     is_exceeded: bool = False
     created_at: datetime
-    updated_at: datetime\n
+    updated_at: datetime
