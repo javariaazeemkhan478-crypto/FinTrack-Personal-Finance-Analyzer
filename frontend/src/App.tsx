@@ -5,6 +5,8 @@ import Register from './pages/Register';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Transactions from './pages/Transactions';
+import Admin from './pages/Admin';
+import Auditor from './pages/Auditor';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     const { user, loading } = useAuth();
@@ -13,7 +15,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     return <>{children}</>;
 };
 
-// Add a route to redirect authenticated users away from public pages
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
     const { user, loading } = useAuth();
     if (loading) return <div>Loading...</div>;
@@ -33,13 +34,14 @@ function App() {
                     <Route path="/" element={<Navigate to="/dashboard" replace />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/transactions" element={<Transactions />} />
+                    <Route path="/admin" element={<Admin />} />
+                    <Route path="/auditor" element={<Auditor />} />
                     <Route path="/budgets" element={<div><div className="card"><h2>Budgets</h2><p>Under Construction</p></div></div>} />
                     <Route path="/goals" element={<div><div className="card"><h2>Goals</h2><p>Under Construction</p></div></div>} />
                     <Route path="/analytics" element={<div><div className="card"><h2>Analytics</h2><p>Under Construction</p></div></div>} />
                     <Route path="/notifications" element={<div><div className="card"><h2>Notifications</h2><p>Under Construction</p></div></div>} />
                     <Route path="/reports" element={<div><div className="card"><h2>Reports</h2><p>Under Construction</p></div></div>} />
                     <Route path="/profile" element={<div><div className="card"><h2>Profile</h2><p>Under Construction</p></div></div>} />
-                    <Route path="/admin" element={<div><div className="card"><h2>Admin</h2><p>Under Construction</p></div></div>} />
                 </Route>
             </Routes>
         </BrowserRouter>
