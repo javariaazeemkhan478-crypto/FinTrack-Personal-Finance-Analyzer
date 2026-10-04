@@ -1,8 +1,10 @@
-from fastapi import FastAPI, Request
+import os
+
+content = """from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.database.connection import connect_to_mongo, close_mongo_connection
-from app.api.v1 import auth, users, transactions, categories, budgets, goals, analytics, notifications
+from app.api.v1 import auth, users, transactions, categories, budgets, goals
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -32,9 +34,11 @@ app.include_router(transactions.router, prefix="/api/v1/transactions", tags=["Tr
 app.include_router(categories.router, prefix="/api/v1/categories", tags=["Categories"])
 app.include_router(budgets.router, prefix="/api/v1/budgets", tags=["Budgets"])
 app.include_router(goals.router, prefix="/api/v1/goals", tags=["Goals"])
-app.include_router(analytics.router, prefix="/api/v1/analytics", tags=["Analytics"])
-app.include_router(notifications.router, prefix="/api/v1/notifications", tags=["Notifications"])
 
 @app.get("/health", tags=["System"])
 async def health_check():
     return {"status": "healthy", "database": "connected"}
+"""
+
+with open("app/main.py", "w", encoding="utf-8") as f:
+    f.write(content)

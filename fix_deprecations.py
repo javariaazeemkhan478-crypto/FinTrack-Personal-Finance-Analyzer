@@ -1,4 +1,34 @@
-from fastapi import FastAPI, Request
+import os
+import re
+
+files_to_update = [
+    'app/api/v1/auth.py',
+    'app/api/v1/transactions.py',
+    'app/api/v1/budgets.py',
+    'app/api/v1/goals.py',
+    'app/core/security.py',
+    'tests/test_finance.py'
+]
+
+for filepath in files_to_update:
+    if os.path.exists(filepath):
+        with open(filepath, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        # Replace datetime.utcnow()
+        if 'datetime.utcnow()' in content:
+            if 'from datetime import datetime' in content and 'UTC' not in content:
+                content = content.replace('from datetime import datetime', 'from datetime import datetime, UTC')
+            content = content.replace('datetime.utcnow()', 'datetime.now(UTC)')
+            
+        # Replace .dict() for pydantic models
+        content = re.sub(r'\.dict\(\)', '.model_dump()', content)
+        
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(content)
+            
+# UPDATE MAIN
+content = """from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.database.connection import connect_to_mongo, close_mongo_connection
@@ -38,3 +68,9 @@ app.include_router(notifications.router, prefix="/api/v1/notifications", tags=["
 @app.get("/health", tags=["System"])
 async def health_check():
     return {"status": "healthy", "database": "connected"}
+"""
+
+with open("app/main.py", "w", encoding="utf-8") as f:
+    f.write(content)
+
+print("Deprecations and main router updated.")
