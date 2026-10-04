@@ -7,6 +7,12 @@ import Dashboard from './pages/Dashboard';
 import Transactions from './pages/Transactions';
 import Admin from './pages/Admin';
 import Auditor from './pages/Auditor';
+import Analytics from './pages/Analytics';
+import Budgets from './pages/Budgets';
+import Goals from './pages/Goals';
+import Notifications from './pages/Notifications';
+import Reports from './pages/Reports';
+import Profile from './pages/Profile';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     const { user, loading } = useAuth();
@@ -36,12 +42,12 @@ function App() {
                     <Route path="/transactions" element={<Transactions />} />
                     <Route path="/admin" element={<Admin />} />
                     <Route path="/auditor" element={<Auditor />} />
-                    <Route path="/budgets" element={<div><div className="card"><h2>Budgets</h2><p>Under Construction</p></div></div>} />
-                    <Route path="/goals" element={<div><div className="card"><h2>Goals</h2><p>Under Construction</p></div></div>} />
-                    <Route path="/analytics" element={<div><div className="card"><h2>Analytics</h2><p>Under Construction</p></div></div>} />
-                    <Route path="/notifications" element={<div><div className="card"><h2>Notifications</h2><p>Under Construction</p></div></div>} />
-                    <Route path="/reports" element={<div><div className="card"><h2>Reports</h2><p>Under Construction</p></div></div>} />
-                    <Route path="/profile" element={<div><div className="card"><h2>Profile</h2><p>Under Construction</p></div></div>} />
+                    <Route path="/budgets" element={<Budgets />} />
+                    <Route path="/goals" element={<Goals />} />
+                    <Route path="/analytics" element={<Analytics />} />
+                    <Route path="/notifications" element={<Notifications />} />
+                    <Route path="/reports" element={<Reports />} />
+                    <Route path="/profile" element={<Profile />} />
                 </Route>
             </Routes>
         </BrowserRouter>

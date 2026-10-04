@@ -18,7 +18,7 @@ async def test_invalid_login(client, setup_db):
 
 @pytest.mark.asyncio
 async def test_unauthorized_access(client, setup_db):
-    res = await client.get("/api/v1/users/me")
+    res = await client.get("/api/v1/auth/me")
     assert res.status_code == 401
 
 @pytest.mark.asyncio
@@ -35,7 +35,8 @@ async def test_ownership_isolation(client, setup_db):
 
     # User A creates a category
     cat_res = await client.post("/api/v1/categories/", json={"name": "Food A", "type": "EXPENSE", "color": "#000"}, headers={"Authorization": f"Bearer {token_a}"})
-    cat_id = cat_res.json()["id"]
+    cat_data = cat_res.json()
+    cat_id = cat_data.get("id") or cat_data.get("_id")
     
     # User B tries to read it
     read_b = await client.get(f"/api/v1/categories/{cat_id}", headers={"Authorization": f"Bearer {token_b}"})
