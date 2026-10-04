@@ -47,4 +47,4 @@ pytest -v
 This project uses strictly isolated JWT refresh tokens and MongoDB aggregations. No secrets, passwords, or `.env` files are pushed to this repository. All passwords are conservatively hashed with `bcrypt`.
 
 ---
-*Developed autonomously via Google Antigravity.*
+
