@@ -36,4 +36,4 @@ class ValidationException(FinTrackException):
             code="VALIDATION_ERROR",
             message=message,
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
-        )\n
+        )

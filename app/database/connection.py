@@ -16,4 +16,4 @@ async def close_mongo_connection():
         db.client.close()
 
 def get_db():
-    return db.db\n
+    return db.db

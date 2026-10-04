@@ -23,4 +23,4 @@ async def create_indexes():
     await db.notifications.create_index("user_id")
     
     # audit_logs
-    await db.audit_logs.create_index("user_id")\n
+    await db.audit_logs.create_index("user_id")
