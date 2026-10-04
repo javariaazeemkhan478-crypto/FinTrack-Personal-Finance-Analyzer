@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../api/client';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
+import { formatCurrency } from '../utils/currency';
 
 export default function Analytics() {
     const [overview, setOverview] = useState<any>(null);
@@ -68,7 +69,7 @@ export default function Analytics() {
                 <div style={{ background: '#fef2f2', border: '1px solid #f87171', color: '#b91c1c', padding: '1rem', borderRadius: '8px', marginBottom: '2rem' }}>
                     <strong>Warning: Unusually high expense detected!</strong>
                     <ul style={{ margin: '0.5rem 0 0 1rem' }}>
-                        {anomalies.map((a, i) => <li key={i}>{a.description} - ${a.amount} (Avg: ${a.average})</li>)}
+                        {anomalies.map((a, i) => <li key={i}>{a.description} - {formatCurrency(a.amount)} (Avg: {formatCurrency(a.average)})</li>)}
                     </ul>
                 </div>
             )}
@@ -77,15 +78,15 @@ export default function Analytics() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
                 <div className="card">
                     <p style={{ color: '#6b7280', margin: 0 }}>Total Income</p>
-                    <h2 style={{ margin: '0.5rem 0', color: '#10b981' }}>${overview?.total_income?.toFixed(2) || '0.00'}</h2>
+                    <h2 style={{ margin: '0.5rem 0', color: '#10b981' }}>{formatCurrency(overview?.total_income)}</h2>
                 </div>
                 <div className="card">
                     <p style={{ color: '#6b7280', margin: 0 }}>Total Expenses</p>
-                    <h2 style={{ margin: '0.5rem 0', color: '#ef4444' }}>${overview?.total_expenses?.toFixed(2) || '0.00'}</h2>
+                    <h2 style={{ margin: '0.5rem 0', color: '#ef4444' }}>{formatCurrency(overview?.total_expenses)}</h2>
                 </div>
                 <div className="card">
                     <p style={{ color: '#6b7280', margin: 0 }}>Net Savings</p>
-                    <h2 style={{ margin: '0.5rem 0' }}>${((overview?.total_income || 0) - (overview?.total_expenses || 0)).toFixed(2)}</h2>
+                    <h2 style={{ margin: '0.5rem 0' }}>{formatCurrency((overview?.total_income || 0) - (overview?.total_expenses || 0))}</h2>
                 </div>
                 <div className="card">
                     <p style={{ color: '#6b7280', margin: 0 }}>Savings Rate</p>
@@ -105,7 +106,7 @@ export default function Analytics() {
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                     <XAxis dataKey="month" />
                                     <YAxis />
-                                    <Tooltip formatter={(val: any) => `$${Number(val).toFixed(2)}`} />
+                                    <Tooltip formatter={(val: any) => formatCurrency(val)} />
                                     <Legend />
                                     <Bar dataKey="income" fill="#10b981" name="Income" />
                                     <Bar dataKey="expenses" fill="#ef4444" name="Expenses" />
@@ -125,7 +126,7 @@ export default function Analytics() {
                                     <Pie data={categories} dataKey="amount" nameKey="category" cx="50%" cy="50%" outerRadius={120} label>
                                         {categories.map((_, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
                                     </Pie>
-                                    <Tooltip formatter={(val: any) => `$${Number(val).toFixed(2)}`} />
+                                    <Tooltip formatter={(val: any) => formatCurrency(val)} />
                                     <Legend />
                                 </PieChart>
                             </ResponsiveContainer>
@@ -143,7 +144,7 @@ export default function Analytics() {
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                     <XAxis dataKey="date" />
                                     <YAxis />
-                                    <Tooltip formatter={(val: any) => `$${Number(val).toFixed(2)}`} />
+                                    <Tooltip formatter={(val: any) => formatCurrency(val)} />
                                     <Line type="monotone" dataKey="amount" stroke="#ef4444" strokeWidth={2} dot={{ r: 4 }} name="Daily Expense" />
                                 </LineChart>
                             </ResponsiveContainer>
@@ -161,7 +162,7 @@ export default function Analytics() {
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                     <XAxis dataKey="month" />
                                     <YAxis />
-                                    <Tooltip formatter={(val: any) => `$${Number(val).toFixed(2)}`} />
+                                    <Tooltip formatter={(val: any) => formatCurrency(val)} />
                                     <Line type="monotone" dataKey="savings" stroke="#3b82f6" strokeWidth={2} dot={{ r: 4 }} name="Net Savings" />
                                 </LineChart>
                             </ResponsiveContainer>
@@ -180,7 +181,7 @@ export default function Analytics() {
                                         <strong>{tx.description}</strong>
                                         <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>{tx.category} • {tx.date}</div>
                                     </div>
-                                    <div style={{ fontWeight: 'bold', color: '#ef4444' }}>${tx.amount.toFixed(2)}</div>
+                                    <div style={{ fontWeight: 'bold', color: '#ef4444' }}>{formatCurrency(tx.amount)}</div>
                                 </div>
                             ))}
                         </div>

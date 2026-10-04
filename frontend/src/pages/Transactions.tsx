@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../api/client';
+import { formatCurrency } from '../utils/currency';
 
 export default function Transactions() {
     const [txs, setTxs] = useState<any[]>([]);
@@ -67,7 +68,7 @@ export default function Transactions() {
                             </select>
                         </div>
                         <div>
-                            <label style={{ display: 'block', marginBottom: '0.5rem' }}>Amount ($) *</label>
+                            <label style={{ display: 'block', marginBottom: '0.5rem' }}>Amount *</label>
                             <input className="input" type="number" step="0.01" min="0.01" placeholder="Amount" value={amount} onChange={e=>setAmount(e.target.value)} required style={{ width: '100%', padding: '0.5rem' }} />
                         </div>
                         <div>
@@ -122,7 +123,7 @@ export default function Transactions() {
                                             <td style={{ padding: '0.75rem' }}>{t.category}</td>
                                             <td style={{ padding: '0.75rem' }}>{t.description}</td>
                                             <td style={{ padding: '0.75rem', fontWeight: 'bold', color: isIncome ? '#10b981' : '#ef4444' }}>
-                                                {isIncome ? '+' : '-'}${t.amount.toFixed(2)}
+                                                {isIncome ? '+' : '-'}{formatCurrency(t.amount)}
                                             </td>
                                         </tr>
                                     )

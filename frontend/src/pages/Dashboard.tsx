@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import api from '../api/client';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { formatCurrency } from '../utils/currency';
 
 export default function Dashboard() {
     const { user } = useAuth();
@@ -43,9 +44,41 @@ export default function Dashboard() {
         fetchDashboardData();
     }, []);
 
+    const generateInsights = () => {
+        const insights = [];
+        
+        if (overview) {
+            const savingsRate = overview.total_income > 0 
+                ? ((overview.total_income - overview.total_expenses) / overview.total_income) * 100 
+                : 0;
+            
+            if (savingsRate > 20) {
+                insights.push(`Great job! Your savings rate is ${savingsRate.toFixed(1)}%.`);
+            } else if (savingsRate < 5 && overview.total_income > 0) {
+                insights.push(`Your savings rate is very low (${savingsRate.toFixed(1)}%). Consider cutting back on expenses.`);
+            }
+        }
+
+        if (categories && categories.length > 0) {
+            const topCat = [...categories].sort((a, b) => b.amount - a.amount)[0];
+            insights.push(`You spent most of your money on ${topCat.category} (${formatCurrency(topCat.amount)}).`);
+        }
+
+        if (budgets && budgets.length > 0) {
+            budgets.forEach(b => {
+                const p = (b.spent / b.amount) * 100;
+                if (p >= 100) insights.push(`You have exceeded your ${b.category} budget!`);
+                else if (p > 80) insights.push(`Your ${b.category} budget is ${p.toFixed(0)}% used. Caution.`);
+            });
+        }
+
+        return insights;
+    };
+
     if (loading) return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading your financial overview...</div>;
 
     const noData = !overview || (overview.total_income === 0 && overview.total_expenses === 0);
+    const insights = generateInsights();
 
     return (
         <div style={{ padding: '1rem' }}>
@@ -74,21 +107,31 @@ export default function Dashboard() {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
                         <div className="card" style={{ borderLeft: '4px solid #3b82f6' }}>
                             <p style={{ color: '#6b7280', margin: 0 }}>Total Balance</p>
-                            <h2 style={{ margin: '0.5rem 0' }}>${overview?.current_balance?.toFixed(2) || '0.00'}</h2>
+                            <h2 style={{ margin: '0.5rem 0' }}>{formatCurrency(overview?.current_balance)}</h2>
                         </div>
                         <div className="card" style={{ borderLeft: '4px solid #10b981' }}>
                             <p style={{ color: '#6b7280', margin: 0 }}>Total Income</p>
-                            <h2 style={{ margin: '0.5rem 0', color: '#10b981' }}>+${overview?.total_income?.toFixed(2) || '0.00'}</h2>
+                            <h2 style={{ margin: '0.5rem 0', color: '#10b981' }}>+{formatCurrency(overview?.total_income)}</h2>
                         </div>
                         <div className="card" style={{ borderLeft: '4px solid #ef4444' }}>
                             <p style={{ color: '#6b7280', margin: 0 }}>Total Expenses</p>
-                            <h2 style={{ margin: '0.5rem 0', color: '#ef4444' }}>-${overview?.total_expenses?.toFixed(2) || '0.00'}</h2>
+                            <h2 style={{ margin: '0.5rem 0', color: '#ef4444' }}>-{formatCurrency(overview?.total_expenses)}</h2>
                         </div>
                         <div className="card" style={{ borderLeft: '4px solid #f59e0b' }}>
                             <p style={{ color: '#6b7280', margin: 0 }}>Net Savings</p>
-                            <h2 style={{ margin: '0.5rem 0' }}>${((overview?.total_income || 0) - (overview?.total_expenses || 0)).toFixed(2)}</h2>
+                            <h2 style={{ margin: '0.5rem 0' }}>{formatCurrency((overview?.total_income || 0) - (overview?.total_expenses || 0))}</h2>
                         </div>
                     </div>
+                    
+                    {/* INSIGHTS */}
+                    {insights.length > 0 && (
+                        <div className="card" style={{ marginBottom: '2rem', background: '#eff6ff', border: '1px solid #bfdbfe' }}>
+                            <h3 style={{ color: '#1e3a8a', marginTop: 0 }}>Financial Insights 💡</h3>
+                            <ul style={{ margin: '0.5rem 0 0 1.2rem', color: '#1e40af' }}>
+                                {insights.map((insight, idx) => <li key={idx} style={{ marginBottom: '0.5rem' }}>{insight}</li>)}
+                            </ul>
+                        </div>
+                    )}
 
                     {/* CHARTS ROW */}
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
@@ -101,7 +144,7 @@ export default function Dashboard() {
                                             <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                             <XAxis dataKey="month" />
                                             <YAxis />
-                                            <Tooltip formatter={(val: any) => `$${Number(val).toFixed(2)}`} />
+                                            <Tooltip formatter={(val: any) => formatCurrency(val)} />
                                             <Bar dataKey="income" fill="#10b981" name="Income" />
                                             <Bar dataKey="expenses" fill="#ef4444" name="Expenses" />
                                         </BarChart>
@@ -119,7 +162,7 @@ export default function Dashboard() {
                                             <Pie data={categories} dataKey="amount" nameKey="category" cx="50%" cy="50%" outerRadius={100} label>
                                                 {categories.map((_, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
                                             </Pie>
-                                            <Tooltip formatter={(val: any) => `$${Number(val).toFixed(2)}`} />
+                                            <Tooltip formatter={(val: any) => formatCurrency(val)} />
                                         </PieChart>
                                     </ResponsiveContainer>
                                 </div>
@@ -145,7 +188,7 @@ export default function Dashboard() {
                                             <div key={b.id}>
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                                                     <strong>{b.category}</strong>
-                                                    <span>${b.spent} / ${b.amount}</span>
+                                                    <span>{formatCurrency(b.spent)} / {formatCurrency(b.amount)}</span>
                                                 </div>
                                                 <div style={{ height: '8px', background: '#e5e7eb', borderRadius: '4px', overflow: 'hidden' }}>
                                                     <div style={{ width: `${percent}%`, height: '100%', background: color, transition: 'width 0.3s' }}></div>
@@ -173,12 +216,12 @@ export default function Dashboard() {
                                             <div key={g.id}>
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                                                     <strong>{g.name}</strong>
-                                                    <span>${g.current_amount} / ${g.target_amount}</span>
+                                                    <span>{formatCurrency(g.current_amount)} / {formatCurrency(g.target_amount)}</span>
                                                 </div>
                                                 <div style={{ height: '8px', background: '#e5e7eb', borderRadius: '4px', overflow: 'hidden' }}>
                                                     <div style={{ width: `${percent}%`, height: '100%', background: '#8b5cf6', transition: 'width 0.3s' }}></div>
                                                 </div>
-                                                <small style={{ color: '#6b7280' }}>{percent.toFixed(1)}% Complete • ${(g.target_amount - g.current_amount).toFixed(2)} remaining</small>
+                                                <small style={{ color: '#6b7280' }}>{percent.toFixed(1)}% Complete • {formatCurrency(g.target_amount - g.current_amount)} remaining</small>
                                             </div>
                                         );
                                     })}
@@ -213,7 +256,7 @@ export default function Dashboard() {
                                                 <td style={{ padding: '0.75rem' }}>{tx.description}</td>
                                                 <td style={{ padding: '0.75rem' }}>{tx.category}</td>
                                                 <td style={{ padding: '0.75rem', fontWeight: 'bold', color: tx.type === 'INCOME' ? '#10b981' : '#ef4444' }}>
-                                                    {tx.type === 'INCOME' ? '+' : '-'}${tx.amount.toFixed(2)}
+                                                    {tx.type === 'INCOME' ? '+' : '-'}{formatCurrency(tx.amount)}
                                                 </td>
                                             </tr>
                                         ))}

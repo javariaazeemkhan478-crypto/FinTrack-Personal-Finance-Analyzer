@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../api/client';
+import { formatCurrency } from '../utils/currency';
 
 export default function Goals() {
     const [goals, setGoals] = useState<any[]>([]);
@@ -77,7 +78,7 @@ export default function Goals() {
                             <input required type="text" value={name} onChange={e => setName(e.target.value)} style={{ width: '100%', padding: '0.5rem' }} placeholder="e.g. Emergency Fund, New Laptop" />
                         </div>
                         <div>
-                            <label style={{ display: 'block', marginBottom: '0.5rem' }}>Target Amount ($) *</label>
+                            <label style={{ display: 'block', marginBottom: '0.5rem' }}>Target Amount *</label>
                             <input required type="number" step="0.01" min="1" value={targetAmount} onChange={e => setTargetAmount(e.target.value)} style={{ width: '100%', padding: '0.5rem' }} placeholder="5000.00" />
                         </div>
                         <div>
@@ -109,8 +110,8 @@ export default function Goals() {
                                         </div>
                                         <div style={{ margin: '1rem 0' }}>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                                                <span>Saved: ${g.current_amount.toFixed(2)}</span>
-                                                <span>Target: ${g.target_amount.toFixed(2)}</span>
+                                                <span>Saved: {formatCurrency(g.current_amount)}</span>
+                                                <span>Target: {formatCurrency(g.target_amount)}</span>
                                             </div>
                                             <div style={{ height: '12px', background: '#e5e7eb', borderRadius: '6px', overflow: 'hidden' }}>
                                                 <div style={{ width: `${percent}%`, height: '100%', background: '#8b5cf6', transition: 'width 0.3s' }}></div>
@@ -118,7 +119,7 @@ export default function Goals() {
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6b7280', fontSize: '0.9rem', marginBottom: '1rem' }}>
                                             <span>{percent.toFixed(1)}% Complete</span>
-                                            <span>${Math.max(0, g.target_amount - g.current_amount).toFixed(2)} Remaining</span>
+                                            <span>{formatCurrency(Math.max(0, g.target_amount - g.current_amount))} Remaining</span>
                                         </div>
 
                                         {!isComplete && (

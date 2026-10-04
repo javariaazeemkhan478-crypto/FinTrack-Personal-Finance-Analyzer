@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../api/client';
+import { formatCurrency } from '../utils/currency';
 
 export default function Budgets() {
     const [budgets, setBudgets] = useState<any[]>([]);
@@ -65,7 +66,7 @@ export default function Budgets() {
                             <input required type="text" value={category} onChange={e => setCategory(e.target.value)} style={{ width: '100%', padding: '0.5rem' }} placeholder="e.g. Food, Rent, Entertainment" />
                         </div>
                         <div>
-                            <label style={{ display: 'block', marginBottom: '0.5rem' }}>Amount ($) *</label>
+                            <label style={{ display: 'block', marginBottom: '0.5rem' }}>Amount *</label>
                             <input required type="number" step="0.01" min="0.01" value={amount} onChange={e => setAmount(e.target.value)} style={{ width: '100%', padding: '0.5rem' }} placeholder="1000.00" />
                         </div>
                         <div style={{ display: 'flex', gap: '1rem' }}>
@@ -106,8 +107,8 @@ export default function Budgets() {
                                         </div>
                                         <div style={{ margin: '1rem 0' }}>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                                                <span>Spent: ${b.spent.toFixed(2)}</span>
-                                                <span>Limit: ${b.amount.toFixed(2)}</span>
+                                                <span>Spent: {formatCurrency(b.spent)}</span>
+                                                <span>Limit: {formatCurrency(b.amount)}</span>
                                             </div>
                                             <div style={{ height: '12px', background: '#e5e7eb', borderRadius: '6px', overflow: 'hidden' }}>
                                                 <div style={{ width: `${percent}%`, height: '100%', background: color, transition: 'width 0.3s' }}></div>
@@ -115,7 +116,7 @@ export default function Budgets() {
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6b7280', fontSize: '0.9rem' }}>
                                             <span>{percent.toFixed(1)}% Used</span>
-                                            <span>${(b.amount - b.spent).toFixed(2)} Remaining</span>
+                                            <span>{formatCurrency(b.amount - b.spent)} Remaining</span>
                                         </div>
                                     </div>
                                 );
