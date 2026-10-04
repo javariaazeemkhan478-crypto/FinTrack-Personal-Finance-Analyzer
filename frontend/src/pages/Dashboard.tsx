@@ -101,7 +101,7 @@ export default function Dashboard() {
                                             <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                             <XAxis dataKey="month" />
                                             <YAxis />
-                                            <Tooltip formatter={(value: number) => `$${value.toFixed(2)}`} />
+                                            <Tooltip formatter={(val: any) => `$${Number(val).toFixed(2)}`} />
                                             <Bar dataKey="income" fill="#10b981" name="Income" />
                                             <Bar dataKey="expenses" fill="#ef4444" name="Expenses" />
                                         </BarChart>
@@ -119,7 +119,7 @@ export default function Dashboard() {
                                             <Pie data={categories} dataKey="amount" nameKey="category" cx="50%" cy="50%" outerRadius={100} label>
                                                 {categories.map((_, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
                                             </Pie>
-                                            <Tooltip formatter={(value: number) => `$${value.toFixed(2)}`} />
+                                            <Tooltip formatter={(val: any) => `$${Number(val).toFixed(2)}`} />
                                         </PieChart>
                                     </ResponsiveContainer>
                                 </div>

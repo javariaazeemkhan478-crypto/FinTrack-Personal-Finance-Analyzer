@@ -105,7 +105,7 @@ export default function Analytics() {
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                     <XAxis dataKey="month" />
                                     <YAxis />
-                                    <Tooltip formatter={(val: number) => `$${val.toFixed(2)}`} />
+                                    <Tooltip formatter={(val: any) => `$${Number(val).toFixed(2)}`} />
                                     <Legend />
                                     <Bar dataKey="income" fill="#10b981" name="Income" />
                                     <Bar dataKey="expenses" fill="#ef4444" name="Expenses" />
@@ -125,7 +125,7 @@ export default function Analytics() {
                                     <Pie data={categories} dataKey="amount" nameKey="category" cx="50%" cy="50%" outerRadius={120} label>
                                         {categories.map((_, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
                                     </Pie>
-                                    <Tooltip formatter={(val: number) => `$${val.toFixed(2)}`} />
+                                    <Tooltip formatter={(val: any) => `$${Number(val).toFixed(2)}`} />
                                     <Legend />
                                 </PieChart>
                             </ResponsiveContainer>
@@ -143,7 +143,7 @@ export default function Analytics() {
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                     <XAxis dataKey="date" />
                                     <YAxis />
-                                    <Tooltip formatter={(val: number) => `$${val.toFixed(2)}`} />
+                                    <Tooltip formatter={(val: any) => `$${Number(val).toFixed(2)}`} />
                                     <Line type="monotone" dataKey="amount" stroke="#ef4444" strokeWidth={2} dot={{ r: 4 }} name="Daily Expense" />
                                 </LineChart>
                             </ResponsiveContainer>
@@ -161,7 +161,7 @@ export default function Analytics() {
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                     <XAxis dataKey="month" />
                                     <YAxis />
-                                    <Tooltip formatter={(val: number) => `$${val.toFixed(2)}`} />
+                                    <Tooltip formatter={(val: any) => `$${Number(val).toFixed(2)}`} />
                                     <Line type="monotone" dataKey="savings" stroke="#3b82f6" strokeWidth={2} dot={{ r: 4 }} name="Net Savings" />
                                 </LineChart>
                             </ResponsiveContainer>
